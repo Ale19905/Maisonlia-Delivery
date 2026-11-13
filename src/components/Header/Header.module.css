@@ -1,0 +1,96 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+    background: rgba(16, 16, 15, 0.96);
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 1160px;
+    min-height: 82px;
+    margin: 0 auto;
+    padding: 12px 24px;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.brandName {
+    color: var(--gold);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+}
+
+.brandSubtitle {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.57rem;
+    letter-spacing: 0.18em;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.navigation a {
+    color: var(--text);
+    font-size: 0.91rem;
+    text-decoration: none;
+}
+
+.navigation a:hover {
+    color: var(--gold);
+}
+
+.contactButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 15px;
+    border: 1px solid var(--gold);
+    border-radius: 9px;
+    color: var(--gold);
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.contactButton:hover {
+    background: rgba(222, 181, 120, 0.1);
+}
+
+@media (max-width: 620px) {
+    .container {
+        min-height: 72px;
+        padding: 12px 18px;
+    }
+
+    .navigation {
+        display: none;
+    }
+
+    .brandName {
+        font-size: 1.04rem;
+    }
+
+    .contactButton {
+        padding: 10px;
+    }
+
+    .contactButton span {
+        display: none;
+    }
+}
