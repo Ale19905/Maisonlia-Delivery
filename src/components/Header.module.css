@@ -101,3 +101,59 @@
         display: none;
     }
 }
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cartButton {
+    min-width: 50px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 9px;
+    border: 1px solid #cba464;
+    border-radius: 12px;
+    background: transparent;
+    color: #e8c68a;
+    cursor: pointer;
+}
+
+.cartCount {
+    font-weight: 800;
+    font-size: 0.82rem;
+}
+
+@media (max-width: 700px) {
+    .nav {
+        display: none;
+    }
+
+    .actions {
+        gap: 7px;
+    }
+}
+
+/* Evita desbordes si hay zoom muy alto o una ventana extremadamente estrecha. */
+@media (max-width: 19rem) {
+    .container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding-block: 12px;
+    }
+
+    .brand {
+        flex: 1 1 100%;
+        align-items: center;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: center;
+    }
+}

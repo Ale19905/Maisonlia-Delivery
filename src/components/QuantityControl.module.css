@@ -1,0 +1,118 @@
+/* Componente compartido: tarjeta, ficha de detalles y panel del carrito. */
+.addButton,
+.stepper {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    border-radius: 10px;
+    font: inherit;
+}
+
+.addButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 8px;
+    border: 0;
+    background: #211a13;
+    color: #fff8e9;
+    font-size: 0.81rem;
+    font-weight: 750;
+    line-height: 1.25;
+    text-align: center;
+    cursor: pointer;
+}
+
+.addButton span {
+    min-width: 0;
+    overflow-wrap: normal;
+}
+
+.addButton svg {
+    flex-shrink: 0;
+}
+
+.stepper {
+    display: grid;
+    grid-template-columns: minmax(44px, 1fr) minmax(24px, 0.85fr) minmax(44px, 1fr);
+    overflow: hidden;
+    border: 1px solid #cdbb9f;
+    background: #fffaf2;
+}
+
+.decreaseButton,
+.increaseButton {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.decreaseButton {
+    background: #f2e7d6;
+    color: #332619;
+}
+
+.increaseButton {
+    background: #211a13;
+    color: #fff8e9;
+}
+
+.quantity {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    padding-inline: 2px;
+    font-size: 0.9rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    color: #382a1b;
+}
+
+.addButton:disabled {
+    background: #e5ddd2;
+    color: #746b60;
+    cursor: not-allowed;
+}
+
+.decreaseButton:disabled,
+.increaseButton:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.addButton:focus-visible,
+.decreaseButton:focus-visible,
+.increaseButton:focus-visible {
+    outline: 3px solid #b98e50;
+    outline-offset: -3px;
+    z-index: 1;
+}
+
+@media (max-width: 700px) {
+
+    .addButton,
+    .stepper {
+        min-height: 40px;
+        height: 40px;
+        border-radius: 8px;
+    }
+
+    .decreaseButton,
+    .increaseButton {
+        min-height: 0;
+        height: 100%;
+    }
+
+    .stepper svg {
+        width: 16px;
+        height: 16px;
+    }
+}

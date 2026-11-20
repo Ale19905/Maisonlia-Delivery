@@ -1,113 +1,31 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ImageOff, RefreshCw, Search, ShoppingBag } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
+import { RefreshCw, Search, ShoppingCart } from 'lucide-react';
 
-import { fetchCatalog } from '../services/catalog.js';
+import ProductCard from './ProductCard.jsx';
+import ProductDetailsModal from './ProductDetailsModal.jsx';
+
 import styles from './Catalog.module.css';
 
 const ALL_CATEGORIES = 'all';
 
-function formatPrice(price, currency) {
-    const formattedAmount = new Intl.NumberFormat('es', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(price);
-
-    return `${currency} ${formattedAmount}`;
-}
-
-function ProductCard({ product }) {
-    return (
-        <article className={styles.productCard}>
-            <div className={styles.imageContainer}>
-                {product.image ? (
-                    <img
-                        className={styles.productImage}
-                        src={product.image.url}
-                        alt={product.image.alt || product.name}
-                        loading="lazy"
-                        decoding="async"
-                    />
-                ) : (
-                    <div className={styles.imagePlaceholder}>
-                        <ImageOff size={30} aria-hidden="true" />
-                        <span>Imagen próximamente</span>
-                    </div>
-                )}
-
-                {!product.is_available && (
-                    <span className={styles.unavailableBadge}>
-                        No disponible
-                    </span>
-                )}
-            </div>
-
-            <div className={styles.productContent}>
-                <h3>{product.name}</h3>
-
-                {product.description && (
-                    <p className={styles.productDescription}>
-                        {product.description}
-                    </p>
-                )}
-
-                <div className={styles.productFooter}>
-                    <strong className={styles.price}>
-                        {formatPrice(product.price, product.currency)}
-                    </strong>
-
-                    <span className={styles.comingSoon}>
-                        {product.is_available
-                            ? 'Carrito próximamente'
-                            : 'Agotado'}
-                    </span>
-                </div>
-            </div>
-        </article>
-    );
-}
-
-export default function Catalog() {
-    const [categories, setCategories] = useState([]);
-    const [products, setProducts] = useState([]);
+/**
+ * Catálogo: búsqueda, categorías y visualización de los productos.
+ * Las tarjetas y la ficha ampliada viven en componentes independientes.
+ */
+export default function Catalog({
+    categories,
+    products,
+    isLoading,
+    error,
+    onRetry
+}) {
     const [categoryId, setCategoryId] = useState(ALL_CATEGORIES);
     const [search, setSearch] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [reloadCount, setReloadCount] = useState(0);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
-    useEffect(() => {
-        let isCurrentRequest = true;
-
-        async function loadCatalog() {
-            setIsLoading(true);
-            setError(null);
-
-            try {
-                const result = await fetchCatalog();
-
-                if (isCurrentRequest) {
-                    setCategories(result.categories);
-                    setProducts(result.products);
-                }
-            } catch (loadError) {
-                console.error('Error al cargar el catálogo:', loadError);
-
-                if (isCurrentRequest) {
-                    setError(loadError.message);
-                }
-            } finally {
-                if (isCurrentRequest) {
-                    setIsLoading(false);
-                }
-            }
-        }
-
-        loadCatalog();
-
-        return () => {
-            isCurrentRequest = false;
-        };
-    }, [reloadCount]);
+    const closeProductDetails = useCallback(() => {
+        setSelectedProductId(null);
+    }, []);
 
     const filteredProducts = useMemo(() => {
         const normalizedSearch = search.trim().toLocaleLowerCase('es');
@@ -129,6 +47,12 @@ export default function Catalog() {
         });
     }, [products, categoryId, search]);
 
+    // Guardamos el ID, no una copia del producto: si el catálogo se actualiza,
+    // la ficha utiliza los datos más recientes disponibles en memoria.
+    const selectedProduct = products.find(
+        (product) => product.id === selectedProductId
+    ) ?? null;
+
     if (isLoading) {
         return (
             <div className={styles.statusBox} role="status">
@@ -146,7 +70,7 @@ export default function Catalog() {
                 <button
                     className={styles.retryButton}
                     type="button"
-                    onClick={() => setReloadCount((count) => count + 1)}
+                    onClick={onRetry}
                 >
                     <RefreshCw size={17} aria-hidden="true" />
                     Volver a intentar
@@ -158,7 +82,7 @@ export default function Catalog() {
     if (products.length === 0) {
         return (
             <div className={styles.statusBox}>
-                <ShoppingBag size={30} aria-hidden="true" />
+                <ShoppingCart size={30} aria-hidden="true" />
                 <h3>Estamos preparando el menú</h3>
                 <p>Pronto encontrarás aquí nuestros productos.</p>
             </div>
@@ -187,7 +111,11 @@ export default function Catalog() {
             >
                 <button
                     type="button"
-                    className={categoryId === ALL_CATEGORIES ? styles.activeCategory : styles.category}
+                    className={
+                        categoryId === ALL_CATEGORIES
+                            ? styles.activeCategory
+                            : styles.category
+                    }
                     onClick={() => setCategoryId(ALL_CATEGORIES)}
                     aria-pressed={categoryId === ALL_CATEGORIES}
                 >
@@ -198,7 +126,11 @@ export default function Catalog() {
                     <button
                         key={category.id}
                         type="button"
-                        className={categoryId === category.id ? styles.activeCategory : styles.category}
+                        className={
+                            categoryId === category.id
+                                ? styles.activeCategory
+                                : styles.category
+                        }
                         onClick={() => setCategoryId(category.id)}
                         aria-pressed={categoryId === category.id}
                     >
@@ -208,13 +140,18 @@ export default function Catalog() {
             </div>
 
             <p className={styles.resultCount} aria-live="polite">
-                {filteredProducts.length} {filteredProducts.length === 1 ? 'producto' : 'productos'}
+                {filteredProducts.length}{' '}
+                {filteredProducts.length === 1 ? 'producto' : 'productos'}
             </p>
 
             {filteredProducts.length > 0 ? (
                 <div className={styles.productGrid}>
                     {filteredProducts.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                            onShowDetails={setSelectedProductId}
+                        />
                     ))}
                 </div>
             ) : (
@@ -234,6 +171,11 @@ export default function Catalog() {
                     </button>
                 </div>
             )}
+
+            <ProductDetailsModal
+                product={selectedProduct}
+                onClose={closeProductDetails}
+            />
         </div>
     );
 }

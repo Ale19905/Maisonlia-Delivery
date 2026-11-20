@@ -1,0 +1,234 @@
+.productCard {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #ebe0d0;
+    border-radius: 18px;
+    background: #fffdf9;
+    box-shadow: 0 4px 20px rgba(35, 23, 10, 0.035);
+}
+
+.imageContainer {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #eee6da;
+}
+
+.imageButton {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.productImage {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    color: #8f806e;
+    font-size: 0.78rem;
+    text-align: center;
+}
+
+.unavailableBadge {
+    position: absolute;
+    z-index: 1;
+    padding: 6px 9px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    pointer-events: none;
+    top: 10px;
+    left: 10px;
+    background: #31271d;
+    color: #fff;
+}
+
+.productContent {
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    padding: 19px;
+}
+
+.productTitle {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.26rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.titleButton {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+
+.titleButton:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.productDescription {
+    margin: 10px 0 20px;
+    color: #685f53;
+    font-size: 0.89rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.productFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.quantityAction {
+    flex: 1 1 145px;
+    width: 100%;
+    max-width: 180px;
+    min-width: 0;
+}
+
+.price {
+    color: #674619;
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+/* En escritorio se conserva la presentación original. */
+@media (max-width: 700px) {
+    /* Todas las tarjetas ocupan la altura de su fila del catálogo. */
+    .productCard {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .productContent {
+        flex: 1;
+        min-height: 0;
+        gap: 0;
+        padding: 12px;
+    }
+
+    .productTitle {
+        min-height: 2.6em;
+        margin-bottom: 12px;
+
+        font-size: 0.97rem;
+        line-height: 1.3;
+    }
+
+    .titleButton {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+
+        overflow: hidden;
+    }
+
+    /* La descripción completa sigue en la ventana de detalles. */
+    .productDescription {
+        display: none;
+    }
+
+    /* Empuja precio y botón hasta la zona inferior de la tarjeta. */
+    .productFooter {
+        margin-top: auto;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .price {
+        font-size: 0.98rem;
+        line-height: 1.25;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .quantityAction {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: none;
+    }
+
+    .unavailableBadge {
+        top: 6px;
+        left: 6px;
+        padding: 5px 7px;
+        font-size: 0.65rem;
+    }
+}
+
+/* Cuando el catálogo dispone de poco espacio, la tarjeta pasa
+   al diseño horizontal compacto de una sola columna. */
+@container (max-width: 19.5rem) {
+    .productCard {
+        display: grid;
+        grid-template-columns: minmax(0, 37%) minmax(0, 1fr);
+        align-items: stretch;
+    }
+
+    .imageContainer {
+        height: 100%;
+        min-height: 152px;
+        aspect-ratio: auto;
+    }
+
+    .productContent {
+        padding: 10px;
+    }
+
+    .productTitle {
+        min-height: 0;
+        font-size: 0.98rem;
+    }
+}
+
+/* Zoom extremo: mostrar la tarjeta completa en vertical. */
+@container (max-width: 16rem) {
+    .productCard {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .imageContainer {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 2 / 1;
+    }
+}
+
+.imageButton:focus-visible {
+    outline: 3px solid #b98e50;
+    outline-offset: -3px;
+}

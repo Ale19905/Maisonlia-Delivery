@@ -2,11 +2,14 @@ import { ArrowRight, Clock3, MessageCircle } from 'lucide-react';
 
 import Header from './components/Header.jsx';
 import Catalog from './components/Catalog.jsx';
+import CartDrawer from './components/CartDrawer.jsx';
+import { CartProvider } from './context/CartContext.jsx';
+import { useCatalog } from './hooks/useCatalog.js';
 import { getWhatsAppUrl, store } from './config/store.js';
 
 import styles from './App.module.css';
 
-export default function App() {
+function Storefront({ catalog }) {
     const whatsappUrl = getWhatsAppUrl();
 
     return (
@@ -24,9 +27,10 @@ export default function App() {
                             <h1>Tu momento, nuestra pasión.</h1>
 
                             <p className={styles.heroDescription}>
-                                Descubrí nuestro menú y elegí tus favoritos.
-                                Pronto también podrás completar todo tu pedido
-                                directamente desde el carrito.
+                                Explorá nuestro menú, agregá tus favoritos al
+                                carrito y prepará tu pedido para enviarlo por
+                                WhatsApp. Coordinaremos los detalles de entrega
+                                directamente contigo.
                             </p>
 
                             <div className={styles.heroActions}>
@@ -66,12 +70,18 @@ export default function App() {
                         <p className={styles.sectionLabel}>Nuestro menú</p>
                         <h2>Descubrí Maison Lia</h2>
                         <p>
-                            Explorá los productos disponibles, filtrá por categoría
-                            y encontrá lo que más te gusta.
+                            Explorá los productos, elegí cantidades y
+                            revisá el pedido en tu carrito.
                         </p>
                     </div>
 
-                    <Catalog />
+                    <Catalog
+                        categories={catalog.categories}
+                        products={catalog.products}
+                        isLoading={catalog.isLoading}
+                        error={catalog.error}
+                        onRetry={catalog.retry}
+                    />
                 </section>
 
                 <section className={styles.infoSection} id="horarios">
@@ -94,10 +104,7 @@ export default function App() {
                             </div>
 
                             {store.openingHours.map(({ days, hours }) => (
-                                <div
-                                    className={styles.hoursRow}
-                                    key={days}
-                                >
+                                <div className={styles.hoursRow} key={days}>
                                     <span>{days}</span>
                                     <strong>{hours}</strong>
                                 </div>
@@ -121,6 +128,21 @@ export default function App() {
                 <span>{store.name} · {store.subtitle}</span>
                 <span>Hecho para disfrutar cada momento.</span>
             </footer>
+
+            <CartDrawer
+                isCatalogLoading={catalog.isLoading}
+                onRefreshCatalog={catalog.refreshCatalog}
+            />
         </div>
+    );
+}
+
+export default function App() {
+    const catalog = useCatalog();
+
+    return (
+        <CartProvider products={catalog.products}>
+            <Storefront catalog={catalog} />
+        </CartProvider>
     );
 }
