@@ -1,0 +1,32 @@
+name: Maison Lia - Comprobaciones
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Probar logica del pedido
+        run: node --test tests/cart-logic.test.js
+
+      - name: Compilar React
+        run: npm run build

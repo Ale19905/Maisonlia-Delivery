@@ -1,0 +1,7 @@
+# Maison Lia - Cabeceras para Cloudflare Pages (archivos estaticos).
+# Vite copia este archivo desde public/ hacia dist/ durante npm run build.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
